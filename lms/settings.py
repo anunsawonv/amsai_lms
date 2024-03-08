@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user',
     'library',
+    'django_recaptcha',
 ]
 
 MIDDLEWARE = [
@@ -146,6 +147,9 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+RECAPTCHA_PUBLIC_KEY = '6LeWzH8pAAAAAMuAKzakAxma2sULsDhi3H3T5c_8'
+RECAPTCHA_PRIVATE_KEY = '6LeWzH8pAAAAAGkN9JpVe5QogKgj9rLiyar7QyNA'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
