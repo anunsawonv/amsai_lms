@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from library.models import LmsEvents, LmsAnnouncement
 from user.models import *
+from .forms import MyForm
+
 
 # Create your views here.
 def login(request):
@@ -91,10 +93,11 @@ def login(request):
 
 
 def registerNonstudent(request):
+    form = MyForm(request.POST)
     if request.method == 'GET':
         random_chars = ''.join(random.choices(string.digits, k=8))
         refno = f"{random_chars}"
-        return render(request, 'accounts/nonstudent_register.html', {'refno': refno})
+        return render(request, 'accounts/nonstudent_register.html', {'refno': refno, "form": form})
     if request.method == 'POST':
         name = request.POST.get('name')
         address = request.POST.get('address')
@@ -105,13 +108,17 @@ def registerNonstudent(request):
         status = "Pending"
         check = LmsNonstudent.objects.filter(username=username)
         if check:
-            return render(request, 'accounts/nonstudent_register.html', {'warn': "Username already exists."})
+            return render(request, 'accounts/nonstudent_register.html', {'warn': "Username already exists.", "form": form})
         else:
-            LmsNonstudent.objects.create(name=name, address=address, contact=contact, username=username,
-                                         dateregistered=dateregistered, status=status, password=password)
-            messages.success(request, f'{username}')
-            return redirect('/amsai/lms/nonstudent_register/')
-    # return render(request, 'accounts/nonstudent_register.html', {'warn': "Complete the form"})
+            if form.is_valid():
+                LmsNonstudent.objects.create(name=name, address=address, contact=contact, username=username,
+                                             dateregistered=dateregistered, status=status, password=password)
+                messages.success(request, f'{username}')
+                return redirect('/amsai/lms/nonstudent_register/')
+            else:
+                messages.error(request, 'Failed reCAPTCHA check!')
+                return render(request, 'accounts/nonstudent_register.html', {'form': form})
+
 
 
 # @login_required(login_url="/amsai/lms/login/")
