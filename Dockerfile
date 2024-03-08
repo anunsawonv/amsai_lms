@@ -4,6 +4,7 @@ WORKDIR /app
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV PIP_ROOT_USER_ACTION=ignore
 
 # install system dependencies
 RUN apt-get update
